@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計畫：重置 - 10關挑戰</title>
+    <style>
+        body { font-family: sans-serif; background-color: #121212; color: #fff; text-align: center; margin: 0; padding: 20px; }
+        #game-container { position: relative; width: 600px; height: 400px; background-color: #2a2521; border: 4px solid #5c4033; margin: 20px auto; overflow: hidden; }
+        .interactive-obj { position: absolute; border: 2px dashed #8b5a2b; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); font-size: 14px; }
+        .interactive-obj:hover { background: rgba(255,255,255,0.2); }
+       
+        /* 物件擺放位置 */
+        #tv { top: 30px; left: 30px; width: 100px; height: 70px; }
+        #safe { top: 30px; left: 160px; width: 80px; height: 60px; }
+        #bookcase { top: 120px; left: 30px; width: 120px; height: 160px; }
+        #dark-wall { top: 30px; left: 260px; width: 120px; height: 100px; }
+        #bed-table { top: 150px; left: 260px; width: 90px; height: 80px; }
+        #box { top: 290px; left: 200px; width: 90px; height: 70px; }
+        #fireplace { top: 150px; left: 400px; width: 120px; height: 120px; }
+        #console { top: 300px; left: 330px; width: 100px; height: 60px; }
+        #power-box { top: 290px; left: 450px; width: 80px; height: 70px; }
+        #door { top: 30px; left: 480px; width: 90px; height: 100px; background-color: #3d2314; }
+
+        /* UI 與物品欄 */
+        #inventory { width: 600px; min-height: 50px; background: #1a1a1a; border: 2px solid #444; margin: 10px auto; display: flex; align-items: center; justify-content: start; padding: 5px; box-sizing: border-box; flex-wrap: wrap; }
+        .inv-slot { padding: 5px 10px; border: 1px solid #777; margin: 3px; font-size: 12px; background: #333; cursor: pointer; }
+        .inv-slot.selected { border-color: #00ff00; background: #445544; }
+        #message-log { margin-top: 10px; color: #ffcc00; font-size: 16px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>《計畫：重置》10關解謎挑戰</h1>
+    <p>依序尋找線索與道具，解開 10 個關卡逃離老房子！</p>
+
+    <div id="game-container">
+        <div id="tv" class="interactive-obj" onclick="interact('tv')">1. 電視機</div>
+        <div id="safe" class="interactive-obj" onclick="interact('safe')">2. 保險箱</div>
+        <div id="bookcase" class="interactive-obj" onclick="interact('bookcase')">3. 舊書櫃</div>
+        <div id="dark-wall" class="interactive-obj" onclick="interact('dark-wall')">4. 陰暗牆面</div>
+        <div id="bed-table" class="interactive-obj" onclick="interact('bed-table')">5. 床頭櫃</div>
+        <div id="box" class="interactive-obj" onclick="interact('box')">6. 舊雜物箱</div>
+        <div id="fireplace" class="interactive-obj" onclick="interact('fireplace')">7. 壁爐暗門</div>
+        <div id="console" class="interactive-obj" onclick="interact('console')">8. 暗室主控台</div>
+        <div id="power-box" class="interactive-obj" onclick="interact('power-box')">9. 電源箱</div>
+        <div id="door" class="interactive-obj" onclick="interact('door')">10. 逃生門</div>
+    </div>
+
+    <h3>道具欄 (點擊可手持道具)</h3>
+    <div id="inventory"></div>
+    <div id="message-log">當前進度：第 1 關 - 請觀察電視機的燈光。</div>
+
+<script>
+    let gameState = {
+        stage: 1,
+        items: [],
+        selectedItem: null
+    };
+
+    function log(text) {
+        document.getElementById('message-log').innerText = text;
+    }
+
+    function addItem(itemName) {
+        if (!gameState.items.includes(itemName)) {
+            gameState.items.push(itemName);
+            renderInventory();
+        }
+    }
+
+    function selectItem(itemName) {
+        gameState.selectedItem = itemName;
+        log("當前手持道具：【" + itemName + "】");
+        renderInventory();
+    }
+
+    function renderInventory() {
+        const invDiv = document.getElementById('inventory');
+        invDiv.innerHTML = "";
+        gameState.items.forEach(item => {
+            const slot = document.createElement('div');
+            slot.className = 'inv-slot' + (gameState.selectedItem === item ? ' selected' : '');
+            slot.innerText = item;
+            slot.onclick = () => selectItem(item);
+            invDiv.appendChild(slot);
+        });
+    }
+
+    function interact(obj) {
+        // 第 1 關
+        if (obj === 'tv' && gameState.stage === 1) {
+            alert("電視機閃爍著紅綠藍燈光：紅燈 3 次、綠燈 1 次、藍燈 4 次。");
+            log("第 2 關：嘗試開啟桌面保險箱。");
+            gameState.stage = 2;
+        }
+        // 第 2 關
+        else if (obj === 'safe' && gameState.stage === 2) {
+            let pass = prompt("請輸入 3 位數密碼：");
+            if (pass === "314") {
+                alert("保險箱開啟了！獲得【舊鑰匙】！");
+                addItem("舊鑰匙");
+                log("第 3 關：前往舊書櫃。");
+                gameState.stage = 3;
+            } else {
+                alert("密碼錯誤！");
+            }
+        }
+        // 第 3 關
+        else if (obj === 'bookcase' && gameState.stage === 3) {
+            if (gameState.selectedItem === "舊鑰匙") {
+                alert("用舊鑰匙打開了書櫃！獲得【復古手電筒】與日誌。");
+                addItem("復古手電筒");
+                log("第 4 關：使用手電筒查看陰暗牆面。");
+                gameState.stage = 4;
+            } else {
+                alert("書櫃被金屬鎖鎖住了，需要【舊鑰匙】。");
+            }
+        }
+        // 第 4 關
+        else if (obj === 'dark-wall' && gameState.stage === 4) {
+            if (gameState.selectedItem === "復古手電筒") {
+                alert("手電筒照亮了牆面，看清上面的符號順序：★ → ▲ → ■ → ◆");
+                log("第 5 關：前往床頭櫃輸入符號順序。");
+                gameState.stage = 5;
+            } else {
+                alert("這裡太暗了，什麼也看不到，需要光源。");
+            }
+        }
+        // 第 5 關
+        else if (obj === 'bed-table' && gameState.stage === 5) {
+            let answer = prompt("請輸入符號首字母順序（提示：Star, Triangle, Square, Diamond => STSD）：").toUpperCase();
+            if (answer === "STSD") {
+                alert("床頭櫃打開了！獲得【紫光燈濾鏡】！");
+                addItem("紫光燈濾鏡");
+                log("第 6 關：組裝濾鏡到雜物箱尋找線索。");
+                gameState.stage = 6;
+            } else {
+                alert("按鈕順序錯誤！");
+            }
+        }
+        // 第 6 關
+        else if (obj === 'box' && gameState.stage === 6) {
+            if (gameState.selectedItem === "紫光燈濾鏡" || gameState.selectedItem === "復古手電筒") {
+                alert("將紫光濾鏡裝在手電筒上，照出舊報紙上的隱藏數字：7294！");
+                log("第 7 關：前往壁爐輸入 4 位數密碼。");
+                gameState.stage = 7;
+            } else {
+                alert("雜物箱裡全是舊報紙，肉眼看不出特殊線索。");
+            }
+        }
+        // 第 7 關
+        else if (obj === 'fireplace' && gameState.stage === 7) {
+            let pass = prompt("請輸入壁爐密碼：");
+            if (pass === "7294") {
+                alert("壁爐移開了，顯露出暗室主控台！");
+                log("第 8 關：檢查暗室主控台。");
+                gameState.stage = 8;
+            } else {
+                alert("密碼錯誤！");
+            }
+        }
+        // 第 8 關
+        else if (obj === 'console' && gameState.stage === 8) {
+            alert("主控台顯示代數算式：A(15) + B(45) - C(30) = ?");
+            log("第 9 關：前往電源箱輸入計算解答。");
+            gameState.stage = 9;
+        }
+        // 第 9 關
+        else if (obj === 'power-box' && gameState.stage === 9) {
+            let pass = prompt("請輸入計算結果（3位數）：");
+            if (pass === "030") {
+                alert("電源箱打開了！獲得【導電金屬線】！");
+                addItem("導電金屬線");
+                log("第 10 關：將金屬線連通逃生門電路。");
+                gameState.stage = 10;
+            } else {
+                alert("密碼錯誤！");
+            }
+        }
+        // 第 10 關
+        else if (obj === 'door' && gameState.stage === 10) {
+            if (gameState.selectedItem === "導電金屬線") {
+                alert("🎉 恭喜！導電金屬線成功重置門禁系統，你成功逃脫了老房子！");
+                location.reload();
+            } else {
+                alert("逃生門電路斷開了，需要手持【導電金屬線】來修復。");
+            }
+        } else {
+            alert("目前這裡沒有進一步的線索，請先嘗試其他物件！");
+        }
+    }
+</script>
+</body>
+</html>
