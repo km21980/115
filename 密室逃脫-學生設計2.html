@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計畫：重置 - 20關終極挑戰</title>
+    <style>
+        body { font-family: sans-serif; background-color: #121212; color: #fff; text-align: center; margin: 0; padding: 15px; }
+        #game-container { position: relative; width: 680px; height: 420px; background-color: #2a2521; border: 4px solid #5c4033; margin: 10px auto; overflow: hidden; }
+        .interactive-obj { position: absolute; border: 1px dashed #8b5a2b; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); font-size: 12px; padding: 2px; }
+        .interactive-obj:hover { background: rgba(255,255,255,0.2); border-color: #fff; }
+        
+        /* 20個地圖物件位置配置 */
+        #o1 { top: 20px; left: 20px; width: 70px; height: 50px; }
+        #o2 { top: 20px; left: 100px; width: 70px; height: 50px; }
+        #o3 { top: 20px; left: 180px; width: 70px; height: 50px; }
+        #o4 { top: 20px; left: 260px; width: 70px; height: 50px; }
+        #o5 { top: 20px; left: 340px; width: 70px; height: 50px; }
+        #o6 { top: 20px; left: 420px; width: 70px; height: 50px; }
+        #o7 { top: 20px; left: 500px; width: 70px; height: 50px; }
+        #o8 { top: 20px; left: 580px; width: 70px; height: 50px; }
+
+        #o9 { top: 180px; left: 20px; width: 80px; height: 60px; }
+        #o10 { top: 180px; left: 120px; width: 80px; height: 60px; }
+        #o11 { top: 180px; left: 220px; width: 80px; height: 60px; }
+        #o12 { top: 180px; left: 320px; width: 80px; height: 60px; }
+        #o13 { top: 180px; left: 420px; width: 80px; height: 60px; }
+        #o14 { top: 180px; left: 520px; width: 80px; height: 60px; }
+
+        #o15 { top: 320px; left: 20px; width: 80px; height: 60px; }
+        #o16 { top: 320px; left: 120px; width: 80px; height: 60px; }
+        #o17 { top: 320px; left: 220px; width: 80px; height: 60px; }
+        #o18 { top: 320px; left: 320px; width: 80px; height: 60px; }
+        #o19 { top: 320px; left: 420px; width: 80px; height: 60px; }
+        #o20 { top: 280px; left: 540px; width: 100px; height: 110px; background-color: #3d2314; }
+
+        #inventory { width: 680px; min-height: 50px; background: #1a1a1a; border: 2px solid #444; margin: 10px auto; display: flex; align-items: center; justify-content: start; padding: 5px; box-sizing: border-box; flex-wrap: wrap; }
+        .inv-slot { padding: 4px 8px; border: 1px solid #777; margin: 2px; font-size: 12px; background: #333; cursor: pointer; }
+        .inv-slot.selected { border-color: #00ff00; background: #445544; }
+        #message-log { margin-top: 5px; color: #ffcc00; font-size: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>《計畫：重置》20關終極解謎挑戰</h1>
+
+    <div id="game-container">
+        <!-- 20 個可點擊物件 -->
+        <div id="o1" class="interactive-obj" onclick="interact(1)">1. 復古電視</div>
+        <div id="o2" class="interactive-obj" onclick="interact(2)">2. 桌面小鎖</div>
+        <div id="o3" class="interactive-obj" onclick="interact(3)">3. 舊書櫃</div>
+        <div id="o4" class="interactive-obj" onclick="interact(4)">4. 陰暗牆面</div>
+        <div id="o5" class="interactive-obj" onclick="interact(5)">5. 床头櫃</div>
+        <div id="o6" class="interactive-obj" onclick="interact(6)">6. 舊報紙箱</div>
+        <div id="o7" class="interactive-obj" onclick="interact(7)">7. 壁爐暗門</div>
+        <div id="o8" class="interactive-obj" onclick="interact(8)">8. 舊木桌天平</div>
+        <div id="o9" class="interactive-obj" onclick="interact(9)">9. 第一電源箱</div>
+        <div id="o10" class="interactive-obj" onclick="interact(10)">10. 地板暗格</div>
+        <div id="o11" class="interactive-obj" onclick="interact(11)">11. 舊式留聲機</div>
+        <div id="o12" class="interactive-obj" onclick="interact(12)">12. 音符八音盒</div>
+        <div id="o13" class="interactive-obj" onclick="interact(13)">13. 畫框相框</div>
+        <div id="o14" class="interactive-obj" onclick="interact(14)">14. 解密羅盤</div>
+        <div id="o15" class="interactive-obj" onclick="interact(15)">15. 玻璃展示櫃</div>
+        <div id="o16" class="interactive-obj" onclick="interact(16)">16. 牆面電路圖</div>
+        <div id="o17" class="interactive-obj" onclick="interact(17)">17. 實驗藥品櫃</div>
+        <div id="o18" class="interactive-obj" onclick="interact(18)">18. 顯微鏡台</div>
+        <div id="o19" class="interactive-obj" onclick="interact(19)">19. 主電源控制</div>
+        <div id="o20" class="interactive-obj" onclick="interact(20)">20. 逃生大門</div>
+    </div>
+
+    <h3>道具欄 (點擊選取道具)</h3>
+    <div id="inventory"></div>
+    <div id="message-log">當前進度：第 1 關 - 請查看復古電視。</div>
+
+<script>
+    let gameState = { stage: 1, items: [], selectedItem: null };
+
+    function log(text) { document.getElementById('message-log').innerText = text; }
+
+    function addItem(item) {
+        if (!gameState.items.includes(item)) {
+            gameState.items.push(item);
+            renderInventory();
+        }
+    }
+
+    function selectItem(item) {
+        gameState.selectedItem = item;
+        log("當前手持：【" + item + "】");
+        renderInventory();
+    }
+
+    function renderInventory() {
+        const inv = document.getElementById('inventory');
+        inv.innerHTML = "";
+        gameState.items.forEach(i => {
+            const slot = document.createElement('div');
+            slot.className = 'inv-slot' + (gameState.selectedItem === i ? ' selected' : '');
+            slot.innerText = i;
+            slot.onclick = () => selectItem(i);
+            inv.appendChild(slot);
+        });
+    }
+
+    function interact(num) {
+        if (num !== gameState.stage && num !== 20) {
+            alert("這個物件目前沒有回應，請先解決前面的關卡！");
+            return;
+        }
+
+        // 關卡邏輯鏈 (1~20)
+        switch(num) {
+            case 1:
+                alert("電視顯示：紅3次、綠1次、藍4次。");
+                log("進度：第 2 關 - 開啟桌面小鎖。"); gameState.stage = 2; break;
+            case 2:
+                if (prompt("輸入 3 位數密碼：") === "314") {
+                    alert("獲得【舊鑰匙】！"); addItem("舊鑰匙");
+                    log("進度：第 3 關 - 開啟舊書櫃。"); gameState.stage = 3;
+                } else alert("密碼錯誤！"); break;
+            case 3:
+                if (gameState.selectedItem === "舊鑰匙") {
+                    alert("打開書櫃獲得【復古手電筒】！"); addItem("復古手電筒");
+                    log("進度：第 4 關 - 照射陰暗牆面。"); gameState.stage = 4;
+                } else alert("需要使用【舊鑰匙】。"); break;
+            case 4:
+                if (gameState.selectedItem === "復古手電筒") {
+                    alert("牆上顯示順序：STSD (Star, Triangle, Square, Diamond)");
+                    log("進度：第 5 關 - 床頭櫃解碼。"); gameState.stage = 5;
+                } else alert("太暗了，需要【復古手電筒】。"); break;
+            case 5:
+                if (prompt("輸入字母順序：").toUpperCase() === "STSD") {
+                    alert("獲得【紫光燈濾鏡】！"); addItem("紫光燈濾鏡");
+                    log("進度：第 6 關 - 查看舊報紙箱。"); gameState.stage = 6;
+                } else alert("錯誤！"); break;
+            case 6:
+                if (gameState.selectedItem === "紫光燈濾鏡") {
+                    alert("報紙上顯現數字：7294！");
+                    log("進度：第 7 關 - 輸入壁爐密碼。"); gameState.stage = 7;
+                } else alert("需要【紫光燈濾鏡】觀察。"); break;
+            case 7:
+                if (prompt("輸入 4 位密碼：") === "7294") {
+                    alert("壁爐移開，發現內部天平！");
+                    log("進度：第 8 關 - 計算天平重量。"); gameState.stage = 8;
+                } else alert("錯誤！"); break;
+            case 8:
+                alert("算式：15 + 45 - 30 = 30。");
+                log("進度：第 9 關 - 輸入第一電源箱密碼。"); gameState.stage = 9; break;
+            case 9:
+                if (prompt("輸入解答：") === "030") {
+                    alert("獲得【撬棒】！"); addItem("撬棒");
+                    log("進度：第 10 關 - 撬開地板暗格。"); gameState.stage = 10;
+                } else alert("錯誤！"); break;
+            case 10:
+                if (gameState.selectedItem === "撬棒") {
+                    alert("撬開地板獲得【黑膠唱片】！"); addItem("黑膠唱片");
+                    log("進度：第 11 關 - 放上留聲機。"); gameState.stage = 11;
+                } else alert("需要工具撬開。"); break;
+            case 11:
+                if (gameState.selectedItem === "黑膠唱片") {
+                    alert("留聲機播放旋律音符：C D E G！");
+                    log("進度：第 12 關 - 解開八音盒。"); gameState.stage = 12;
+                } else alert("需要【黑膠唱片】。"); break;
+            case 12:
+                if (prompt("輸入 4 個音符字母：").toUpperCase() === "CDEG") {
+                    alert("打開八音盒獲得【放大鏡】！"); addItem("放大鏡");
+                    log("進度：第 13 關 - 觀察畫框相框。"); gameState.stage = 13;
+                } else alert("錯誤！"); break;
+            case 13:
+                if (gameState.selectedItem === "放大鏡") {
+                    alert("相框微雕文字提示：角度 90-180-270。");
+                    log("進度：第 14 關 - 調整解密羅盤。"); gameState.stage = 14;
+                } else alert("圖案太小，需要【放大鏡】。"); break;
+            case 14:
+                if (prompt("輸入角度總和(90+180+270)：") === "540") {
+                    alert("獲得【展示櫃鑰匙】！"); addItem("展示櫃鑰匙");
+                    log("進度：第 15 關 - 開啟玻璃展示櫃。"); gameState.stage = 15;
+                } else alert("錯誤！"); break;
+            case 15:
+                if (gameState.selectedItem === "展示櫃鑰匙") {
+                    alert("獲得【半張電路圖】！"); addItem("半張電路圖");
+                    log("進度：第 16 關 - 對照牆面電路圖。"); gameState.stage = 16;
+                } else alert("鎖住了。"); break;
+            case 16:
+                if (gameState.selectedItem === "半張電路圖") {
+                    alert("電路圖拼合，顯示所需化學式：H2O。");
+                    log("進度：第 17 關 - 調配實驗藥品。"); gameState.stage = 17;
+                } else alert("需要完整電路圖。"); break;
+            case 17:
+                if (prompt("輸入水的分化式字母數字組合：").toUpperCase() === "H2O") {
+                    alert("調配成功，獲得【顯微鏡玻片】！"); addItem("顯微鏡玻片");
+                    log("進度：第 18 關 - 使用顯微鏡。"); gameState.stage = 18;
+                } else alert("配方錯誤！"); break;
+            case 18:
+                if (gameState.selectedItem === "顯微鏡玻片") {
+                    alert("顯微鏡下看到核心密碼：8866！");
+                    log("進度：第 19 關 - 主電源控制台。"); gameState.stage = 19;
+                } else alert("需要放入【顯微鏡玻片】。"); break;
+            case 19:
+                if (prompt("輸入 4 位主電源密碼：") === "8866") {
+                    alert("主電源通電！獲得【導電金屬線】！"); addItem("導電金屬線");
+                    log("進度：第 20 關 - 連通逃生大門！"); gameState.stage = 20;
+                } else alert("錯誤！"); break;
+            case 20:
+                if (gameState.stage === 20 && gameState.selectedItem === "導電金屬線") {
+                    alert("🎉 🎉 恭喜成功突破全部 20 個關卡，完美通關！");
+                    location.reload();
+                } else alert("門禁系統未重置，需要【導電金屬線】且完成前 19 關！"); break;
+        }
+    }
+</script>
+</body>
+</html>
+
